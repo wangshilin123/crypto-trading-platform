@@ -1,0 +1,78 @@
+# 编译输出
+build/
+bin/
+lib/
+*.o
+*.a
+*.so
+*.dylib
+*.exe
+
+# IDE和编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+
+# 配置文件（包含敏感信息）
+config/api_keys.json
+config/*.key
+config/*.pem
+*.env
+
+# 日志文件
+logs/
+*.log
+
+# 数据库文件
+*.db
+*.sqlite
+*.sqlite3
+
+# 临时文件
+tmp/
+temp/
+*.tmp
+
+# 依赖库（如果使用子模块管理则不忽略）
+third_party/*/
+!third_party/CMakeLists.txt
+
+# 测试输出
+test_results/
+coverage/
+*.gcov
+*.gcda
+*.gcno
+
+# 文档生成
+docs/html/
+docs/latex/
+
+# 备份文件
+*.bak
+*.backup
+
+# 性能分析
+*.prof
+perf.data*
+callgrind.out.*
+
+# Core dumps
+core
+core.*
+
+# Python（如果有Python脚本）
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
