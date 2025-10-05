@@ -102,7 +102,8 @@ std::shared_ptr<spdlog::logger> Logger::get()
     if (!default_logger_)
     {
         // 自动初始化为默认配置
-        initialize();
+        Config default_config;
+        initialize(default_config);
     }
     return default_logger_;
 }

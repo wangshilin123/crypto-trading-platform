@@ -1,11 +1,11 @@
 #include "utils/crypto_utils.h"
 #include <openssl/hmac.h>
-#include <openssl/sha.h>
-#include <openssl/md5.h>
+#include <openssl/evp.h>
 #include <iomanip>
 #include <sstream>
 #include <algorithm>
 #include <cctype>
+#include <cstring>
 
 namespace crypto_trading {
 namespace utils {
@@ -39,25 +39,31 @@ std::vector<uint8_t> CryptoUtils::hmacSha256Raw(const std::string& data, const s
 
 std::string CryptoUtils::sha256(const std::string& data)
 {
-    unsigned char hash[SHA256_DIGEST_LENGTH];
-    SHA256_CTX sha256;
-    SHA256_Init(&sha256);
-    SHA256_Update(&sha256, data.c_str(), data.length());
-    SHA256_Final(hash, &sha256);
+    unsigned char hash[EVP_MAX_MD_SIZE];
+    unsigned int hash_len = 0;
 
-    std::vector<uint8_t> result(hash, hash + SHA256_DIGEST_LENGTH);
+    EVP_MD_CTX* ctx = EVP_MD_CTX_new();
+    EVP_DigestInit_ex(ctx, EVP_sha256(), nullptr);
+    EVP_DigestUpdate(ctx, data.c_str(), data.length());
+    EVP_DigestFinal_ex(ctx, hash, &hash_len);
+    EVP_MD_CTX_free(ctx);
+
+    std::vector<uint8_t> result(hash, hash + hash_len);
     return toHex(result);
 }
 
 std::string CryptoUtils::md5(const std::string& data)
 {
-    unsigned char hash[MD5_DIGEST_LENGTH];
-    MD5_CTX md5;
-    MD5_Init(&md5);
-    MD5_Update(&md5, data.c_str(), data.length());
-    MD5_Final(hash, &md5);
+    unsigned char hash[EVP_MAX_MD_SIZE];
+    unsigned int hash_len = 0;
 
-    std::vector<uint8_t> result(hash, hash + MD5_DIGEST_LENGTH);
+    EVP_MD_CTX* ctx = EVP_MD_CTX_new();
+    EVP_DigestInit_ex(ctx, EVP_md5(), nullptr);
+    EVP_DigestUpdate(ctx, data.c_str(), data.length());
+    EVP_DigestFinal_ex(ctx, hash, &hash_len);
+    EVP_MD_CTX_free(ctx);
+
+    std::vector<uint8_t> result(hash, hash + hash_len);
     return toHex(result);
 }
 
@@ -125,7 +131,6 @@ std::vector<uint8_t> CryptoUtils::base64Decode(const std::string& encoded)
     std::vector<uint8_t> result;
     int i = 0;
     int j = 0;
-    int in_ = 0;
     unsigned char char_array_4[4], char_array_3[3];
 
     for (char c : encoded)

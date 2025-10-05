@@ -73,7 +73,12 @@ TimePoint TimeUtils::fromIso8601(const std::string& iso_str)
     std::istringstream ss(iso_str);
     ss >> std::get_time(&tm_time, "%Y-%m-%dT%H:%M:%S");
 
-    auto tp = std::chrono::system_clock::from_time_t(std::mktime(&tm_time));
+    // 使用timegm处理UTC时间（而不是mktime的本地时间）
+#ifdef _WIN32
+    auto tp = std::chrono::system_clock::from_time_t(_mkgmtime(&tm_time));
+#else
+    auto tp = std::chrono::system_clock::from_time_t(timegm(&tm_time));
+#endif
 
     // 解析毫秒部分
     size_t dot_pos = iso_str.find('.');

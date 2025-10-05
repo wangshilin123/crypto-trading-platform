@@ -1,6 +1,9 @@
 #include <gtest/gtest.h>
 #include "utils/logger.h"
 #include <filesystem>
+#include <fstream>
+#include <thread>
+#include <chrono>
 
 using namespace crypto_trading::utils;
 
@@ -119,16 +122,27 @@ TEST_F(LoggerTest, LogLevelControl)
 
     LOG_DEBUG("This should not appear");
     LOG_INFO("This should not appear");
-    LOG_WARN("This should appear");
-    LOG_ERROR("This should appear");
+    LOG_WARN("This should appear - warning");
+    LOG_ERROR("This should appear - error");
 
     Logger::flush();
+    Logger::shutdown();
+
+    // 短暂延迟确保文件写入完成
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     // 读取日志文件验证
     std::ifstream log_file("test_logs/levels.log");
+    ASSERT_TRUE(log_file.is_open()) << "Failed to open log file";
+
     std::string content((std::istreambuf_iterator<char>(log_file)),
                         std::istreambuf_iterator<char>());
+    log_file.close();
 
+    // Debug和Info不应该出现
     ASSERT_EQ(content.find("This should not appear"), std::string::npos);
-    ASSERT_NE(content.find("This should appear"), std::string::npos);
+
+    // Warn和Error应该出现
+    ASSERT_NE(content.find("warning"), std::string::npos);
+    ASSERT_NE(content.find("error"), std::string::npos);
 }

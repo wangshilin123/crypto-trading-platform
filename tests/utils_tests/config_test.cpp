@@ -161,9 +161,13 @@ TEST_F(ConfigTest, Validate)
 {
     auto& config = ConfigManager::getInstance();
     config.loadFromString(R"({
-        "exchange.name": "binance",
-        "exchange.timeout": 5000,
-        "risk.max_order": 1000
+        "exchange": {
+            "name": "binance",
+            "timeout": 5000
+        },
+        "risk": {
+            "max_order": 1000
+        }
     })");
 
     std::vector<std::string> required_keys = {

@@ -58,7 +58,7 @@ public:
      * @brief 初始化日志系统
      * @param config 日志配置
      */
-    static void initialize(const Config& config = Config{});
+    static void initialize(const Config& config);
 
     /**
      * @brief 关闭日志系统
