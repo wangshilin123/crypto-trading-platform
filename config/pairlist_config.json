@@ -1,0 +1,121 @@
+{
+    "_comment": "交易对配置示例 - 类似freqtrade的pairlist配置",
+
+    "pairlist": {
+        "method": "VolumePairList",
+        "config": {
+            "number_assets": 20,
+            "sort_key": "quoteVolume",
+            "min_value": 0,
+            "refresh_period": 1800
+        }
+    },
+
+    "pairlist_filters": [
+        {
+            "_comment": "第一步：从所有市场获取前50个交易量最大的交易对",
+            "method": "VolumePairList",
+            "number_assets": 50,
+            "sort_key": "quoteVolume",
+            "min_value": 1000000,
+            "refresh_period": 1800
+        },
+        {
+            "_comment": "第二步：过滤掉价差过大的交易对",
+            "method": "SpreadFilter",
+            "max_spread_ratio": 0.005
+        },
+        {
+            "_comment": "第三步：价格过滤",
+            "method": "PriceFilter",
+            "min_price": 0.00001,
+            "max_price": 100000
+        },
+        {
+            "_comment": "第四步：波动率过滤",
+            "method": "VolatilityFilter",
+            "min_volatility": 0.02,
+            "max_volatility": 0.5
+        },
+        {
+            "_comment": "第五步：黑名单过滤",
+            "method": "BlacklistFilter",
+            "blacklist": [
+                "DOGE/USDT",
+                "SHIB/USDT",
+                "LUNA/USDT"
+            ]
+        }
+    ],
+
+    "example_configs": {
+        "static_whitelist": {
+            "_comment": "使用静态白名单",
+            "pairlist_filters": [
+                {
+                    "method": "StaticPairList",
+                    "whitelist": [
+                        "BTC/USDT",
+                        "ETH/USDT",
+                        "BNB/USDT",
+                        "XRP/USDT",
+                        "ADA/USDT"
+                    ]
+                }
+            ]
+        },
+
+        "volume_top20": {
+            "_comment": "动态选择交易量前20的交易对",
+            "pairlist_filters": [
+                {
+                    "method": "VolumePairList",
+                    "number_assets": 20,
+                    "sort_key": "quoteVolume",
+                    "min_value": 5000000
+                }
+            ]
+        },
+
+        "volatility_trading": {
+            "_comment": "高波动率交易",
+            "pairlist_filters": [
+                {
+                    "method": "VolumePairList",
+                    "number_assets": 100,
+                    "sort_key": "quoteVolume"
+                },
+                {
+                    "method": "VolatilityFilter",
+                    "min_volatility": 0.05,
+                    "max_volatility": 0.3
+                },
+                {
+                    "method": "BlacklistFilter",
+                    "blacklist": ["DOGE/USDT", "SHIB/USDT"]
+                }
+            ]
+        },
+
+        "low_spread_scalping": {
+            "_comment": "低价差剥头皮策略",
+            "pairlist_filters": [
+                {
+                    "method": "VolumePairList",
+                    "number_assets": 50,
+                    "sort_key": "quoteVolume",
+                    "min_value": 10000000
+                },
+                {
+                    "method": "SpreadFilter",
+                    "max_spread_ratio": 0.001
+                },
+                {
+                    "method": "VolatilityFilter",
+                    "min_volatility": 0.01,
+                    "max_volatility": 0.10
+                }
+            ]
+        }
+    }
+}

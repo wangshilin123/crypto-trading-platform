@@ -85,6 +85,18 @@ target_link_libraries(utils_lib
     Threads::Threads
 )
 
+# 交易库
+add_library(trading_lib STATIC
+    src/trading/pair_filter.cpp
+    src/trading/pair_list_manager.cpp
+)
+
+target_link_libraries(trading_lib
+    PUBLIC
+    utils_lib
+    nlohmann_json::nlohmann_json
+)
+
 # 交易所库（稍后实现）
 # add_library(exchange_lib STATIC
 #     src/exchange/binance/binance_client.cpp
