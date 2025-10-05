@@ -1,0 +1,16 @@
+{
+    "binance": {
+        "api_key": "YOUR_BINANCE_API_KEY",
+        "secret_key": "YOUR_BINANCE_SECRET_KEY",
+        "testnet": {
+            "api_key": "your_testnet_api_key",
+            "secret_key": "your_testnet_secret_key"
+        }
+    },
+    "okx": {
+        "api_key": "YOUR_OKX_API_KEY",
+        "secret_key": "YOUR_OKX_SECRET_KEY",
+        "passphrase": "YOUR_OKX_PASSPHRASE"
+    },
+    "note": "⚠️  NEVER commit this file to version control! Keep your API keys secure."
+}
